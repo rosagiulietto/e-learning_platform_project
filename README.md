@@ -1,2 +1,2 @@
-# e-learning_platform_project
-An e-learning platform built in Django
+# E-Learning Platform
+## An e-learning platform built in Django
