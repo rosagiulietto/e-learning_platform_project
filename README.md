@@ -1,8 +1,10 @@
 # E-Learning Platform
-## An e-learning platform built with Django
+## An e-learning platform built in Django
 
 This platform offers courses on several subjects.
+
 Each course has various modules and each module
+
 contains some contents.
 
 ## Example:
