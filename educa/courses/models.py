@@ -2,11 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from .fields import OrderField
 
 
 class Subject(models.Model):
-    title = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=200, unique=True)
+    title   = models.CharField(max_length=200)
+    slug    = models.SlugField(max_length=200, unique=True)
     
     class Meta:
         ordering = ['title']
@@ -16,10 +17,10 @@ class Subject(models.Model):
     
 
 class Course(models.Model):
-    owner = models.ForeignKey(User, related_name='courses_created', on_delete=models.CASCADE)
+    owner   = models.ForeignKey(User, related_name='courses_created', on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, related_name='courses', on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=200, unique=True)
+    title   = models.CharField(max_length=200)
+    slug    = models.SlugField(max_length=200, unique=True)
     overview = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
 
@@ -31,13 +32,18 @@ class Course(models.Model):
 
 
 class Module(models.Model):
-    # Each course has several modules: that's why we use a foreign key 
-    course = models.ForeignKey(Course, related_name='modules', on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
+    # Each course has several modules: 
+    # that's why we use a foreign key 
+    course      = models.ForeignKey(Course, related_name='modules', on_delete=models.CASCADE)
+    title       = models.CharField(max_length=200)
     description = models.TextField(blank=True)
+    order       = OrderField(blank=True, for_fields=['course'])
 
     def __str__(self):
-        return self.title
+        return f'{self.order}. {self.title}'
+    
+    class Meta:
+        ordering = ['order']
 
 
 class Content(models.Model):
@@ -48,9 +54,14 @@ class Content(models.Model):
         limit_choices_to={'model__in':('text','video','image','file')})
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
+    order = OrderField(blank=True, for_fields=['module'])
+
+    class Meta:
+        ordering = ['order']
 
 
-# ItemBase model is an abstract model, so Django does not create any table in the db
+# ItemBase model is an abstract model, 
+# so Django does not create any table in the db
 class ItemBase(models.Model):
     owner = models.ForeignKey(User, related_name='%(class)s_related', on_delete=models.CASCADE)
     title = models.CharField(max_length=250)
