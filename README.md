@@ -3,9 +3,9 @@
 
 This platform offers courses on several subjects.
 
-Each course has various modules and each module
+Each course has various modules 
 
-contains some contents.
+and each module contains some contents.
 
 ## Example:
 
@@ -31,6 +31,4 @@ Subject: Music
         Module 2 (title='Beethoven')
             content 1: images
             content 2: music
-
-
-
+            
